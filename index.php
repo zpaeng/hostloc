@@ -2,17 +2,20 @@
 // 设置默认时区
 date_default_timezone_set("PRC");
 
-// ↓↓↓↓↓↓↓↓↓↓配置开始（修改配置后，如果当前目录下有account.dat文件需删除！）↓↓↓↓↓↓↓↓↓↓
+// 从环境变量中读取账号密码
+$accounts = getenv('ACCOUNTS'); // 格式：'username1,password1;username2,password2'
+$accountsArray = explode(';', $accounts);
+$account = [];
+foreach ($accountsArray as $acc) {
+    list($username, $password) = explode(',', $acc);
+    $account[] = [$username, $password];
+}
 
-// 多账号复制多个，一行一个账号密码
-$account[] = ['账号1', '密码1'];
-$account[] = ['账号2', '密码2'];
-// 签到失败通知KEY 获取方法：Telegram关注 @onePushBot 发送/key即可获取
-$tg_push_key = '';
+// 签到失败通知KEY
+$tg_push_key = getenv('TG_PUSH_KEY');
+
 // 账号签到情况保存文件（非请勿改，内有密码注意泄露）
 $file = dirname(__FILE__) . '/account.dat';
-
-// ↑↑↑↑↑↑↑↑↑↑配置结束（修改配置后，如果当前目录下有account.dat文件需删除！）↑↑↑↑↑↑↑↑↑↑
 
 // Go
 $need_brush = need_brush($account);
